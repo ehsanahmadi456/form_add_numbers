@@ -45,16 +45,30 @@ function saveItem(id) {
   const address = document.getElementById(`address-${id}`).value;
   const checkbox = document.getElementById(`checkbox-${id}`).checked;
 
-  const newItem = {
-    id: id,
-    name: name,
-    number: number,
-    address: address,
-    checkbox: checkbox
-  };
+  const itemIndex = itemsArray.findIndex(item => item.id === id);
 
-  itemsArray.push(newItem);
+  if (itemIndex === -1) {
+    itemsArray.push({
+      id: id,
+      name: name,
+      number: number,
+      address: address,
+      checkbox: checkbox
+    });
+  } else {
+    itemsArray[itemIndex] = {
+      id: id,
+      name: name,
+      number: number,
+      address: address,
+      checkbox: checkbox
+    };
+  }
 
+  displaySavedItem(id, name, number, address, checkbox);
+}
+
+function displaySavedItem(id, name, number, address, checkbox) {
   const itemDiv = document.getElementById(`item-${id}`);
   itemDiv.className = 'item-container readonly';
 
@@ -79,12 +93,74 @@ function saveItem(id) {
           <span>${checkbox ? '✓' : '✗'}</span>
         </div>
         
-        <div class="saved-item">
-          <span>Saved</span>
+        <div class="actions">
+          <button class="edit-btn" onclick="editItem(${id})">Edit</button>
+          <button class="delete-btn" onclick="deleteItem(${id})">Delete</button>
         </div>
       `;
+}
 
-  console.log('Saved items:', itemsArray);
+function editItem(id) {
+  const item = itemsArray.find(item => item.id === id);
+  if (!item) return;
+
+  const itemDiv = document.getElementById(`item-${id}`);
+  itemDiv.className = 'item-container';
+
+  itemDiv.innerHTML = `
+        <div class="form-group">
+          <label for="edit-name-${id}">Name:</label>
+          <input type="text" id="edit-name-${id}" value="${item.name}">
+        </div>
+        
+        <div class="form-group">
+          <label for="edit-number-${id}">Number:</label>
+          <input type="number" id="edit-number-${id}" value="${item.number}">
+        </div>
+        
+        <div class="form-group">
+          <label for="edit-address-${id}">Address:</label>
+          <input type="text" id="edit-address-${id}" value="${item.address}">
+        </div>
+        
+        <div class="form-group">
+          <label>
+            <input type="checkbox" id="edit-checkbox-${id}" ${item.checkbox ? 'checked' : ''}> Approved
+          </label>
+        </div>
+        
+        <div class="actions">
+          <button class="save-btn" onclick="updateItem(${id})">Update</button>
+        </div>
+      `;
+}
+
+function updateItem(id) {
+  const name = document.getElementById(`edit-name-${id}`).value;
+  const number = document.getElementById(`edit-number-${id}`).value;
+  const address = document.getElementById(`edit-address-${id}`).value;
+  const checkbox = document.getElementById(`edit-checkbox-${id}`).checked;
+
+  const itemIndex = itemsArray.findIndex(item => item.id === id);
+  if (itemIndex !== -1) {
+    itemsArray[itemIndex] = {
+      id: id,
+      name: name,
+      number: number,
+      address: address,
+      checkbox: checkbox
+    };
+  }
+
+  displaySavedItem(id, name, number, address, checkbox);
+}
+
+function deleteItem(id) {
+  itemsArray = itemsArray.filter(item => item.id !== id);
+  const itemDiv = document.getElementById(`item-${id}`);
+  if (itemDiv) {
+    itemDiv.remove();
+  }
 }
 
 document.getElementById('addItemBtn').addEventListener('click', addNewItem);
