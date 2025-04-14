@@ -1,26 +1,41 @@
 let itemsArray = [];
-
 let itemIdCounter = 1;
 
 function addNewItem() {
-  const tbody = document.getElementById('itemsList');
+  const container = document.getElementById('itemsList');
 
-  const newRow = document.createElement('tr');
-  newRow.id = `item-${itemIdCounter}`;
-  newRow.className = 'editable';
+  const itemDiv = document.createElement('div');
+  itemDiv.id = `item-${itemIdCounter}`;
+  itemDiv.className = 'item-container';
 
-  newRow.innerHTML = `
-                <td><input type="text" id="name-${itemIdCounter}" placeholder="نام"></td>
-                <td><input type="number" id="number-${itemIdCounter}" placeholder="شماره"></td>
-                <td><input type="text" id="address-${itemIdCounter}" placeholder="آدرس"></td>
-                <td><input type="checkbox" id="checkbox-${itemIdCounter}"></td>
-                <td>
-                    <button class="save-btn" onclick="saveItem(${itemIdCounter})">ذخیره</button>
-                </td>
-            `;
+  itemDiv.innerHTML = `
+        <div class="form-group">
+          <label for="name-${itemIdCounter}">Name:</label>
+          <input type="text" id="name-${itemIdCounter}" placeholder="Enter name">
+        </div>
+        
+        <div class="form-group">
+          <label for="number-${itemIdCounter}">Number:</label>
+          <input type="number" id="number-${itemIdCounter}" placeholder="Enter number">
+        </div>
+        
+        <div class="form-group">
+          <label for="address-${itemIdCounter}">Address:</label>
+          <input type="text" id="address-${itemIdCounter}" placeholder="Enter address">
+        </div>
+        
+        <div class="form-group">
+          <label>
+            <input type="checkbox" id="checkbox-${itemIdCounter}"> Approved
+          </label>
+        </div>
+        
+        <div class="actions">
+          <button class="save-btn" onclick="saveItem(${itemIdCounter})">Save</button>
+        </div>
+      `;
 
-  tbody.appendChild(newRow);
-
+  container.appendChild(itemDiv);
   itemIdCounter++;
 }
 
@@ -40,20 +55,36 @@ function saveItem(id) {
 
   itemsArray.push(newItem);
 
-  const row = document.getElementById(`item-${id}`);
-  row.className = 'readonly';
+  const itemDiv = document.getElementById(`item-${id}`);
+  itemDiv.className = 'item-container readonly';
 
-  row.innerHTML = `
-                <td>${name}</td>
-                <td>${number}</td>
-                <td>${address}</td>
-                <td>${checkbox ? '✓' : '✗'}</td>
-                <td>ذخیره شده</td>
-            `;
+  itemDiv.innerHTML = `
+        <div class="saved-item">
+          <span class="saved-item-label">Name:</span>
+          <span>${name}</span>
+        </div>
+        
+        <div class="saved-item">
+          <span class="saved-item-label">Number:</span>
+          <span>${number}</span>
+        </div>
+        
+        <div class="saved-item">
+          <span class="saved-item-label">Address:</span>
+          <span>${address}</span>
+        </div>
+        
+        <div class="saved-item">
+          <span class="saved-item-label">Approved:</span>
+          <span>${checkbox ? '✓' : '✗'}</span>
+        </div>
+        
+        <div class="saved-item">
+          <span>Saved</span>
+        </div>
+      `;
 
-  console.log(itemsArray);
+  console.log('Saved items:', itemsArray);
 }
 
 document.getElementById('addItemBtn').addEventListener('click', addNewItem);
-
-window.onload = addNewItem;

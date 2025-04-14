@@ -8,30 +8,44 @@
     body {
       font-family: Arial, sans-serif;
       margin: 20px;
-      direction: rtl;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-
-    th,
-    td {
+    .item-container {
       border: 1px solid #ddd;
+      margin-bottom: 15px;
+      padding: 10px;
+      background-color: #fffde7;
+    }
+
+    .item-container.readonly {
+      background-color: #f9f9f9;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 15px;
+      padding: 8px 15px;
+    }
+
+    .form-group {
+      margin-bottom: 10px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="number"] {
+      width: 100%;
       padding: 8px;
-      text-align: right;
+      box-sizing: border-box;
     }
 
-    th {
-      background-color: #f2f2f2;
-    }
-
-    button {
-      cursor: pointer;
-      padding: 5px 10px;
-      margin: 2px;
+    .actions {
+      margin-top: 10px;
+      text-align: left;
     }
 
     .add-btn {
@@ -40,47 +54,34 @@
       border: none;
       padding: 10px 15px;
       margin-bottom: 10px;
+      cursor: pointer;
     }
 
     .save-btn {
       background-color: #2196F3;
       color: white;
       border: none;
+      padding: 8px 15px;
+      cursor: pointer;
     }
 
-    input[type="text"],
-    input[type="number"] {
-      width: 100%;
-      padding: 5px;
-      box-sizing: border-box;
+    .saved-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
     }
 
-    .editable {
-      background-color: #fffde7;
-    }
-
-    .readonly {
-      background-color: #f9f9f9;
+    .saved-item-label {
+      font-weight: bold;
+      color: #555;
     }
   </style>
 </head>
 
 <body>
-  <button id="addItemBtn" class="add-btn">+ افزودن آیتم جدید</button>
-
-  <table id="itemsTable">
-    <thead>
-      <tr>
-        <th>نام</th>
-        <th>شماره</th>
-        <th>آدرس</th>
-        <th>تایید شده</th>
-        <th>عملیات</th>
-      </tr>
-    </thead>
-    <tbody id="itemsList">
-    </tbody>
-  </table>
+  <button id="addItemBtn" class="add-btn">+ Add New Item</button>
+  <div id="itemsList"></div>
 
   <script src="list.js"></script>
 </body>
