@@ -1,6 +1,23 @@
 let itemsArray = [];
 let itemIdCounter = 1;
 
+function getTemplateHTML(templateId, replacements) {
+  const template = document.getElementById(templateId).innerHTML;
+  let html = template;
+
+  for (const key in replacements) {
+    const value = replacements[key];
+    if (key === 'checkbox') {
+      html = html.replace('{{checkbox}}', value ? '✓' : '✗');
+      html = html.replace('{{checked}}', value ? 'checked' : '');
+    } else {
+      html = html.replace(new RegExp(`{{${key}}}`, 'g'), value);
+    }
+  }
+
+  return html;
+}
+
 function addNewItem() {
   const container = document.getElementById('itemsList');
 
@@ -8,32 +25,7 @@ function addNewItem() {
   itemDiv.id = `item-${itemIdCounter}`;
   itemDiv.className = 'item-container';
 
-  itemDiv.innerHTML = `
-        <div class="form-group">
-          <label for="name-${itemIdCounter}">Name:</label>
-          <input type="text" id="name-${itemIdCounter}" placeholder="Enter name">
-        </div>
-        
-        <div class="form-group">
-          <label for="number-${itemIdCounter}">Number:</label>
-          <input type="number" id="number-${itemIdCounter}" placeholder="Enter number">
-        </div>
-        
-        <div class="form-group">
-          <label for="address-${itemIdCounter}">Address:</label>
-          <input type="text" id="address-${itemIdCounter}" placeholder="Enter address">
-        </div>
-        
-        <div class="form-group">
-          <label>
-            <input type="checkbox" id="checkbox-${itemIdCounter}"> Approved
-          </label>
-        </div>
-        
-        <div class="actions">
-          <button class="save-btn" onclick="saveItem(${itemIdCounter})">Save</button>
-        </div>
-      `;
+  itemDiv.innerHTML = getTemplateHTML('newItemFormTemplate', { id: itemIdCounter });
 
   container.appendChild(itemDiv);
   itemIdCounter++;
@@ -47,57 +39,34 @@ function saveItem(id) {
 
   const itemIndex = itemsArray.findIndex(item => item.id === id);
 
+  const itemData = {
+    id: id,
+    name: name,
+    number: number,
+    address: address,
+    checkbox: checkbox
+  };
+
   if (itemIndex === -1) {
-    itemsArray.push({
-      id: id,
-      name: name,
-      number: number,
-      address: address,
-      checkbox: checkbox
-    });
+    itemsArray.push(itemData);
   } else {
-    itemsArray[itemIndex] = {
-      id: id,
-      name: name,
-      number: number,
-      address: address,
-      checkbox: checkbox
-    };
+    itemsArray[itemIndex] = itemData;
   }
 
-  displaySavedItem(id, name, number, address, checkbox);
+  displaySavedItem(id, itemData);
 }
 
-function displaySavedItem(id, name, number, address, checkbox) {
+function displaySavedItem(id, itemData) {
   const itemDiv = document.getElementById(`item-${id}`);
   itemDiv.className = 'item-container readonly';
 
-  itemDiv.innerHTML = `
-        <div class="saved-item">
-          <span class="saved-item-label">Name:</span>
-          <span>${name}</span>
-        </div>
-        
-        <div class="saved-item">
-          <span class="saved-item-label">Number:</span>
-          <span>${number}</span>
-        </div>
-        
-        <div class="saved-item">
-          <span class="saved-item-label">Address:</span>
-          <span>${address}</span>
-        </div>
-        
-        <div class="saved-item">
-          <span class="saved-item-label">Approved:</span>
-          <span>${checkbox ? '✓' : '✗'}</span>
-        </div>
-        
-        <div class="actions">
-          <button class="edit-btn" onclick="editItem(${id})">Edit</button>
-          <button class="delete-btn" onclick="deleteItem(${id})">Delete</button>
-        </div>
-      `;
+  itemDiv.innerHTML = getTemplateHTML('savedItemTemplate', {
+    id: id,
+    name: itemData.name,
+    number: itemData.number,
+    address: itemData.address,
+    checkbox: itemData.checkbox
+  });
 }
 
 function editItem(id) {
@@ -107,32 +76,13 @@ function editItem(id) {
   const itemDiv = document.getElementById(`item-${id}`);
   itemDiv.className = 'item-container';
 
-  itemDiv.innerHTML = `
-        <div class="form-group">
-          <label for="edit-name-${id}">Name:</label>
-          <input type="text" id="edit-name-${id}" value="${item.name}">
-        </div>
-        
-        <div class="form-group">
-          <label for="edit-number-${id}">Number:</label>
-          <input type="number" id="edit-number-${id}" value="${item.number}">
-        </div>
-        
-        <div class="form-group">
-          <label for="edit-address-${id}">Address:</label>
-          <input type="text" id="edit-address-${id}" value="${item.address}">
-        </div>
-        
-        <div class="form-group">
-          <label>
-            <input type="checkbox" id="edit-checkbox-${id}" ${item.checkbox ? 'checked' : ''}> Approved
-          </label>
-        </div>
-        
-        <div class="actions">
-          <button class="save-btn" onclick="updateItem(${id})">Update</button>
-        </div>
-      `;
+  itemDiv.innerHTML = getTemplateHTML('editItemFormTemplate', {
+    id: id,
+    name: item.name,
+    number: item.number,
+    address: item.address,
+    checkbox: item.checkbox
+  });
 }
 
 function updateItem(id) {
@@ -143,16 +93,17 @@ function updateItem(id) {
 
   const itemIndex = itemsArray.findIndex(item => item.id === id);
   if (itemIndex !== -1) {
-    itemsArray[itemIndex] = {
+    const itemData = {
       id: id,
       name: name,
       number: number,
       address: address,
       checkbox: checkbox
     };
-  }
 
-  displaySavedItem(id, name, number, address, checkbox);
+    itemsArray[itemIndex] = itemData;
+    displaySavedItem(id, itemData);
+  }
 }
 
 function deleteItem(id) {

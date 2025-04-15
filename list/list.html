@@ -95,12 +95,98 @@
       font-weight: bold;
       color: #555;
     }
+
+    /* Hide templates */
+    [data-template] {
+      display: none;
+    }
   </style>
 </head>
 
 <body>
   <button id="addItemBtn" class="add-btn">+ Add New Item</button>
   <div id="itemsList"></div>
+
+  <div data-template="newItemForm" id="newItemFormTemplate">
+    <div class="form-group">
+      <label for="name-{{id}}">Name:</label>
+      <input type="text" id="name-{{id}}" placeholder="Enter name">
+    </div>
+
+    <div class="form-group">
+      <label for="number-{{id}}">Number:</label>
+      <input type="number" id="number-{{id}}" placeholder="Enter number">
+    </div>
+
+    <div class="form-group">
+      <label for="address-{{id}}">Address:</label>
+      <input type="text" id="address-{{id}}" placeholder="Enter address">
+    </div>
+
+    <div class="form-group">
+      <label>
+        <input type="checkbox" id="checkbox-{{id}}"> Approved
+      </label>
+    </div>
+
+    <div class="actions">
+      <button class="save-btn" onclick="saveItem({{id}})">Save</button>
+    </div>
+  </div>
+
+  <div data-template="savedItem" id="savedItemTemplate">
+    <div class="saved-item">
+      <span class="saved-item-label">Name:</span>
+      <span>{{name}}</span>
+    </div>
+
+    <div class="saved-item">
+      <span class="saved-item-label">Number:</span>
+      <span>{{number}}</span>
+    </div>
+
+    <div class="saved-item">
+      <span class="saved-item-label">Address:</span>
+      <span>{{address}}</span>
+    </div>
+
+    <div class="saved-item">
+      <span class="saved-item-label">Approved:</span>
+      <span>{{checkbox}}</span>
+    </div>
+
+    <div class="actions">
+      <button class="edit-btn" onclick="editItem({{id}})">Edit</button>
+      <button class="delete-btn" onclick="deleteItem({{id}})">Delete</button>
+    </div>
+  </div>
+
+  <div data-template="editItemForm" id="editItemFormTemplate">
+    <div class="form-group">
+      <label for="edit-name-{{id}}">Name:</label>
+      <input type="text" id="edit-name-{{id}}" value="{{name}}">
+    </div>
+
+    <div class="form-group">
+      <label for="edit-number-{{id}}">Number:</label>
+      <input type="number" id="edit-number-{{id}}" value="{{number}}">
+    </div>
+
+    <div class="form-group">
+      <label for="edit-address-{{id}}">Address:</label>
+      <input type="text" id="edit-address-{{id}}" value="{{address}}">
+    </div>
+
+    <div class="form-group">
+      <label>
+        <input type="checkbox" id="edit-checkbox-{{id}}" {{checked}}> Approved
+      </label>
+    </div>
+
+    <div class="actions">
+      <button class="save-btn" onclick="updateItem({{id}})">Update</button>
+    </div>
+  </div>
 
   <script src="list.js"></script>
 </body>
