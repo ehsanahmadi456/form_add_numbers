@@ -1,0 +1,73 @@
+<?php
+
+/**
+ * @file
+ * Contains list module implementation.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_theme().
+ */
+function list_theme() {
+  return [
+    'list_items' => [
+      'variables' => [
+        'items' => [],
+        'can_edit' => FALSE,
+        'can_add' => FALSE,
+        'add_form' => NULL,
+        'edit_button' => NULL,
+        'delete_button' => NULL,
+        'direction' => 'ltr',
+        'attributes' => [],
+      ],
+      'template' => 'list',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_form().
+ */
+function list_item_form($form, FormStateInterface $form_state) {
+  $form['name'] = [
+    '#type' => 'textfield',
+    '#title' => t('Name'),
+    '#required' => TRUE,
+  ];
+
+  $form['number'] = [
+    '#type' => 'number',
+    '#title' => t('Number'),
+    '#required' => TRUE,
+  ];
+
+  $form['address'] = [
+    '#type' => 'textarea',
+    '#title' => t('Address'),
+    '#required' => TRUE,
+  ];
+
+  $form['approved'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Approved'),
+    '#default_value' => FALSE,
+  ];
+
+  $form['actions']['submit'] = [
+    '#type' => 'submit',
+    '#value' => t('Save'),
+  ];
+
+  return $form;
+}
+
+/**
+ * Implements hook_form_submit().
+ */
+function list_item_form_submit($form, FormStateInterface $form_state) {
+  // Here you would typically save the data to your database
+  \Drupal::messenger()->addMessage(t('Item saved successfully.'));
+}

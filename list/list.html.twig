@@ -1,0 +1,88 @@
+{# list.html.twig #}
+{% set classes = [
+  'item-list-wrapper',
+  direction == 'rtl' ? 'rtl' : 'ltr',
+] %}
+
+<div{{ attributes.addClass(classes) }}>
+  {{ attach_library('your_theme/item-list-styles') }}
+  
+  {% if items %}
+    <div class="items-container">
+      {% for item in items %}
+        <div class="item-container readonly" data-item-id="{{ item.id }}">
+          <div class="saved-item">
+            <span class="saved-item-label">{{ 'Name:'|t }}</span>
+            <span>{{ item.name }}</span>
+          </div>
+
+          <div class="saved-item">
+            <span class="saved-item-label">{{ 'Number:'|t }}</span>
+            <span>{{ item.number }}</span>
+          </div>
+
+          <div class="saved-item">
+            <span class="saved-item-label">{{ 'Address:'|t }}</span>
+            <span>{{ item.address }}</span>
+          </div>
+
+          <div class="saved-item">
+            <span class="saved-item-label">{{ 'Approved:'|t }}</span>
+            <span>{{ item.approved ? '✓'|t : '✗'|t }}</span>
+          </div>
+
+          {% if can_edit %}
+            <div class="actions">
+              {{ edit_button }}
+              {{ delete_button }}
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% if can_add %}
+    {{ add_form }}
+  {% endif %}
+</div>
+
+<style>
+  .item-list-wrapper {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+  }
+
+  .item-container {
+    border: 1px solid #ddd;
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #fffde7;
+  }
+
+  .item-container.readonly {
+    background-color: #f9f9f9;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 15px;
+    padding: 8px 15px;
+  }
+
+  .saved-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+  }
+
+  .saved-item-label {
+    font-weight: bold;
+    color: #555;
+  }
+
+  .actions {
+    margin-top: 10px;
+    text-align: right;
+  }
+</style>
